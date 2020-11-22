@@ -117,7 +117,7 @@ public class ManAgent extends DancerAgent {
                             String[] womanParams = replyFromWoman.split(",");
 
                             //если ответила первая женщина, запомним
-                            if (repliesCnt == 0)
+                            if (myWoman == null)
                             {
                                 myWoman = reply.getSender();
                                 myWomanParams = womanParams;
@@ -144,7 +144,7 @@ public class ManAgent extends DancerAgent {
                             }
                         }
 
-                        ++repliesCnt;
+                        repliesCnt++;
                         if (repliesCnt >= womanAgents.length)
                         {
                             repliesCnt = 0;

@@ -17,7 +17,7 @@ public class WomanAgent extends DancerAgent {
         // Женщины отправляют все данные
         type = "Woman";
         super.setup();
-        infoString = name + "," + Integer.toString(height) + "," + selfCharacteristic.toString() + "," + wantedCharacteristic.toString();
+        infoString = name + "," + height + "," + selfCharacteristic.toString() + "," + wantedCharacteristic.toString();
 
         addBehaviour(new ReceivePairRequestBehaviour());
     }
@@ -50,13 +50,13 @@ public class WomanAgent extends DancerAgent {
                     reply = myAgent.receive(mt);
                     if (reply != null)
                     {
-                        String replyFromMan[] = reply.getContent().split(",");
+                        String[] replyFromMan = reply.getContent().split(",");
                         DancerСharacteristic manCharacteristic = DancerСharacteristic.valueOf(replyFromMan[0]);
                         DancerСharacteristic manWantedCharacteristic = DancerСharacteristic.valueOf(replyFromMan[1]);
                         //проверка мужчины на соответствие
                         if (!manFound && (manCharacteristic == wantedCharacteristic || manWantedCharacteristic == selfCharacteristic))
                         {
-                            myLogger.log(Level.INFO, "WomanAgent " + getAID().getName() + " accept");
+                            //myLogger.log(Level.INFO, "WomanAgent " + getAID().getName() + " accept");
                             //если соответствует - отправляем согласие и переходим на следующий шаг
                             ACLMessage cfp = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
                             cfp.addReceiver(reply.getSender());
@@ -66,7 +66,7 @@ public class WomanAgent extends DancerAgent {
                             step = 2;
                         } else
                         {
-                            myLogger.log(Level.INFO, "WomanAgent " + getAID().getName() + " reject");
+                            //myLogger.log(Level.INFO, "WomanAgent " + getAID().getName() + " reject");
                             //если не соответствует - отправляем отказ
                             ACLMessage cfp = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
                             cfp.addReceiver(reply.getSender());
@@ -88,9 +88,7 @@ public class WomanAgent extends DancerAgent {
                             manFound = true;
                             myLogger.log(Level.FINE, myAgent.getName() + ": found man " + reply.getSender().getName());
                         }
-                        //если мужчина не согласен
-                        else
-                            step = 0;
+                        step = 0;
                     } else
                         block();
                     break;
