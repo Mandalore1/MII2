@@ -12,12 +12,11 @@ import java.util.logging.Level;
 
 //Класс, считывающий мужчин и женщин из файла и создающий агентов
 public class Client extends Agent {
-    protected static Logger myLogger = Logger.getMyLogger(DancerAgent.class.getName());
 
     @Override
     protected void setup()
     {
-        myLogger.log(Level.INFO, "Client" + getName() + " is ready to create agents");
+        System.out.println(getLocalName() + ": готов к созданию агентов");
         Object[] args = this.getArguments();
         if (args != null && args.length == 2)
         {
@@ -80,7 +79,7 @@ public class Client extends Agent {
 
         } else
         {
-            myLogger.log(Level.SEVERE, "Client" + getName() + " wrong arguments");
+            System.out.println(getLocalName() + ": неверно заданы аргументы");
         }
 
         doDelete();

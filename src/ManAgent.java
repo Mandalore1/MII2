@@ -57,7 +57,7 @@ public class ManAgent extends DancerAgent {
     protected void takeDown()
     {
         super.takeDown();
-        myLogger.log(Level.INFO, "ManAgent " + getAID().getName() + " terminating");
+        System.out.println(this.getLocalName() + ": завершает работу");
     }
 
     // Отправление запроса женщинам на создание пары
@@ -73,7 +73,7 @@ public class ManAgent extends DancerAgent {
             switch (step)
             {
                 case 1: // поиск женщин
-                    myLogger.log(Level.INFO, "ManAgent " + getAID().getName() + " start searching for woman");
+                    System.out.println(getLocalName() + ": начинает поиск женщин");
                     DFAgentDescription template = new DFAgentDescription();
                     ServiceDescription sd = new ServiceDescription();
                     sd.setType("Woman");
@@ -88,13 +88,12 @@ public class ManAgent extends DancerAgent {
                     } catch (FIPAException e)
                     {
                         e.printStackTrace();
-                        myLogger.log(Level.SEVERE, myAgent.getName() + ": WomanAgents not found");
+                        System.out.println(getLocalName() + ": не найдена ни одна женщина");
                     }
                     step = 2;
                     break;
 
                 case 2: // рассылка запросов
-                    //myLogger.log(Level.INFO, "ManAgent " + getAID().getName() + " pending requests to woman");
                     ACLMessage cfp = new ACLMessage(ACLMessage.PROPOSE);
                     for (AID womanAgent : womanAgents)
                         cfp.addReceiver(womanAgent); // добавляем всех женщин в получатели
@@ -156,14 +155,14 @@ public class ManAgent extends DancerAgent {
                 case 4: //ответ лучшей женщине
                     if (myWoman == null)
                     {
-                        myLogger.log(Level.INFO, myAgent.getName() + ": didn't find any woman (all rejected)");
+                        System.out.println(getLocalName() + ": не нашел женщин (все отказали)");
                     } else
                     {
                         ACLMessage message = new ACLMessage(ACLMessage.CONFIRM);
                         message.addReceiver(myWoman);
                         message.setConversationId("Men-Women");
                         send(message);
-                        myLogger.log(Level.INFO, myAgent.getName() + ": found woman " + myWoman.getName());
+                        System.out.println(getLocalName() + ": нашел женщину " + myWoman.getLocalName());
                         womanFound = true;
                     }
                     break;

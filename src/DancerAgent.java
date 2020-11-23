@@ -9,7 +9,6 @@ import java.util.logging.Level;
 
 //Общий класс для мужчин и женщин
 public class DancerAgent extends Agent {
-    protected static Logger myLogger = Logger.getMyLogger(DancerAgent.class.getName());
 
     protected String name;
     protected int height;
@@ -48,10 +47,10 @@ public class DancerAgent extends Agent {
         try
         {
             DFService.register(this, dfd);
-            myLogger.log(Level.INFO, type + " " + this.getLocalName() + " was registered");
+            System.out.println(this.getLocalName() + ": зарегистрирован в DF");
         } catch (FIPAException e)
         {
-            myLogger.log(Level.SEVERE, type + " " + this.getLocalName() + " - Cannot register with DF", e);
+            System.out.println(this.getLocalName() + ": невозможно зарегистрировать в DF");
             e.printStackTrace();
             doDelete();
         }
