@@ -17,6 +17,7 @@ public class DancerAgent extends Agent {
 
     protected String infoString;
     protected String type;
+    private boolean registered = false;
 
     //Перед вызовом setup в классах-потомках должно быть определено поле type
     @Override
@@ -32,12 +33,16 @@ public class DancerAgent extends Agent {
             wantedCharacteristic = DancerСharacteristic.valueOf((String) args[3]);
         }
 
-        registerDF();
+        registerDFAs(type);
     }
 
     //Регистрация в DF
-    protected void registerDF()
+    protected void registerDFAs(String type)
     {
+        if (registered)
+        {
+            deregisterDF();
+        }
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
         sd.setType(type);
@@ -47,7 +52,8 @@ public class DancerAgent extends Agent {
         try
         {
             DFService.register(this, dfd);
-            System.out.println(this.getLocalName() + ": зарегистрирован в DF");
+            registered = true;
+            System.out.println(this.getLocalName() + ": зарегистрирован в DF как " + type);
         } catch (FIPAException e)
         {
             System.out.println(this.getLocalName() + ": невозможно зарегистрировать в DF");
@@ -56,8 +62,7 @@ public class DancerAgent extends Agent {
         }
     }
 
-    @Override
-    protected void takeDown()
+    protected void deregisterDF()
     {
         try
         {
@@ -66,5 +71,11 @@ public class DancerAgent extends Agent {
         {
             fe.printStackTrace();
         }
+    }
+
+    @Override
+    protected void takeDown()
+    {
+        deregisterDF();
     }
 }

@@ -29,7 +29,7 @@ public class WomanAgent extends DancerAgent {
         System.out.println(this.getLocalName() + ": завершает работу");
     }
 
-    // Принятие запроса от мужчин на создание пары
+    // Прием запроса от мужчин на создание пары
     private class ReceivePairRequestBehaviour extends CyclicBehaviour {
         private int step = 0;
         private MessageTemplate mt;
