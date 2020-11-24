@@ -1,13 +1,16 @@
+import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Level;
 
 //Класс, считывающий мужчин и женщин из файла и создающий агентов
@@ -77,9 +80,42 @@ public class Client extends Agent {
                 ioe.printStackTrace();
             }
 
+            //очищаем файл
+            try
+            {
+                FileWriter fileWriter = new FileWriter("output.txt");
+                fileWriter.write("");
+                fileWriter.close();
+            } catch (IOException ioe)
+            {
+                System.err.println("Can't open output.txt");
+                ioe.printStackTrace();
+            }
         } else
         {
             System.out.println(getLocalName() + ": неверно заданы аргументы");
+        }
+
+        //ждем инициализации
+        this.doWait(1000);
+
+        //отправляем серверу сообщение о готовности
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Server");
+        template.addServices(sd);
+        try
+        {
+            DFAgentDescription[] result = DFService.search(this, template);
+            AID server = result[0].getName();
+
+            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+            msg.addReceiver(server);
+            msg.setConversationId("Client-Server");
+            send(msg);
+        } catch (FIPAException e)
+        {
+            e.printStackTrace();
         }
 
         doDelete();

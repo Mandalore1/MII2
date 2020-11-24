@@ -10,6 +10,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.util.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import static java.lang.Math.abs;
@@ -58,6 +60,23 @@ public class ManAgent extends DancerAgent {
     {
         super.takeDown();
         System.out.println(this.getLocalName() + ": завершает работу");
+    }
+
+    //Запись в файл
+    private void writeAgent()
+    {
+        try
+        {
+            FileWriter fileWriter = new FileWriter("output.txt", true);
+            fileWriter.write(String.format("Мужчина [Имя] %s, [Рост]%d, [Характеристика]%s, [Желаемая характеристика]%s\nЖенщина [Имя] %s, [Рост]%s, [Характеристика]%s, [Желаемая характеристика]%s\n",
+                    name, height, selfCharacteristic, wantedCharacteristic, myWomanParams[0], myWomanParams[1], myWomanParams[2], myWomanParams[3]));
+            fileWriter.write("Разница роста: " + abs(height - Integer.parseInt(myWomanParams[1])) + "\n\n");
+            fileWriter.close();
+        }catch (IOException ioe)
+        {
+            System.err.println("Can't open output.txt");
+            ioe.printStackTrace();
+        }
     }
 
     // Отправление запроса женщинам на создание пары
@@ -156,6 +175,7 @@ public class ManAgent extends DancerAgent {
                     if (myWoman == null)
                     {
                         System.out.println(getLocalName() + ": не нашел женщин (все отказали)");
+                        womanFound = true;
                     } else
                     {
                         ACLMessage message = new ACLMessage(ACLMessage.CONFIRM);
@@ -163,6 +183,7 @@ public class ManAgent extends DancerAgent {
                         message.setConversationId("Men-Women");
                         send(message);
                         System.out.println(getLocalName() + ": нашел женщину " + myWoman.getLocalName());
+                        writeAgent();
                         womanFound = true;
                     }
                     break;
@@ -194,4 +215,3 @@ public class ManAgent extends DancerAgent {
         }
     }
 }
-

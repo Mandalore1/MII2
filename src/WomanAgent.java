@@ -66,7 +66,7 @@ public class WomanAgent extends DancerAgent {
                             step = 2;
                         } else
                         {
-                            System.out.println(getLocalName() + ": отказ мужчине " + reply.getSender().getLocalName());
+                            System.out.println(getLocalName() + ": отказ мужчине " + reply.getSender().getLocalName() + (manFound ? " (уже занята)":" (не подходит)"));
                             //если не соответствует - отправляем отказ
                             ACLMessage cfp = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
                             cfp.addReceiver(reply.getSender());
